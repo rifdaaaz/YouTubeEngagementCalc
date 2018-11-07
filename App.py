@@ -9,6 +9,8 @@ app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
 
+
+
 google = oauth.remote_app(
     'google',
     consumer_key=app.config.get('GOOGLE_ID'),
@@ -53,7 +55,15 @@ def authorized():
         )
     session['google_token'] = (resp['access_token'], '')
     me = google.get('userinfo')
-    return jsonify({"data": me.data})
+    return '''
+    <div>
+    <h1>Hello {}!</h1>
+    <img src="{}" alt="Red dot" />
+    <a href="http://127.0.0.1:5000/logout"> Logout </a >
+    </div>
+    '''.format(me.data["given_name"],me.data["picture"])
+    return "Hello {}".format(me.data["given_name"])
+    return jsonify({"data": me.data,"status":me.status})
 
 
 @google.tokengetter
