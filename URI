@@ -1,7 +1,4 @@
 
-
-
-
 CHANNEL
 https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=UCeXBXzelo7MvLkMr3dAKODQ&key=AIzaSyCHPstZ_0VoIvpAL5n49piska5DF17zBgw&fields=items(id,snippet,statistics)
 
