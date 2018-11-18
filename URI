@@ -1,0 +1,12 @@
+
+
+
+
+CHANNEL
+https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=UCeXBXzelo7MvLkMr3dAKODQ&key=AIzaSyCHPstZ_0VoIvpAL5n49piska5DF17zBgw&fields=items(id,snippet,statistics)
+
+VIDEO
+https://www.googleapis.com/youtube/v3/videos?id=xyx6hrb7LTs&key=AIzaSyCHPstZ_0VoIvpAL5n49piska5DF17zBgw&fields=items(id,snippet(channelId,title),statistics)&part=snippet,statistics
+
+SEARCH
+https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=UCJFp8uSYCjXOMnkUyb3CQ3Q&key=AIzaSyCHPstZ_0VoIvpAL5n49piska5DF17zBgw
