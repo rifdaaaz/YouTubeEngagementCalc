@@ -1,26 +1,22 @@
 import urllib.request
 import json, math
 
-def channel_query(query):
+def channel_query(channelID):
+    #mengambil info ttg channel dari youtube data API
     api_key = 'AIzaSyCHPstZ_0VoIvpAL5n49piska5DF17zBgw'
     url = 'https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&fields=items(id,snippet,statistics)&key=' + api_key
-    final_url = url + '&id=' + query
+    final_url = url + '&id=' + channelID
 
     chl_obj = urllib.request.urlopen(final_url)
 
     data = json.load(chl_obj)
 
-    # print(data['items'][0])
-
-    # for item in (data['items']):
-    #     print ('Channel : '+ str(item['snippet']['title']))
-    #     print ('Views : '+ str(item['statistics']['viewCount']))
-
-    #     print ('Subscriber : '+ str(item['statistics']['subscriberCount']))
 
     return data['items'][0]
 
 def video_search(channelID,pageToken):
+    #mengambil list video dari sebuah channel
+
     api_key = 'AIzaSyCHPstZ_0VoIvpAL5n49piska5DF17zBgw'
     url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=50&type=video&key=' + api_key
     final_url = url + '&channelId=' + channelID +'&pageToken=' +pageToken
@@ -33,18 +29,20 @@ def video_search(channelID,pageToken):
 # print(video_search('UCeXBXzelo7MvLkMr3dAKODQ'))
 
 def count_like(channelID):
+    #menghitung total like dari sebuah channel, iterate semua videonya
+
     sum_like=0
     sum_comment=0
 
     #searchvideo
     temp = video_search(channelID,'')
     for i in range(len(temp['items'])):
-        print("hitung"+str(i))
+        # print("hitung"+str(i))
         sum_like += like_video(temp['items'][i]['id']['videoId'])
         sum_comment += comment_video(temp['items'][i]['id']['videoId'])
     for x in range(math.floor(((temp['pageInfo']['totalResults'])-1)/50)):
         temp = video_search(channelID,temp['nextPageToken'])
-        print("page " + str(x) + " is loading")
+        # print("page " + str(x) + " is loading")
         for i in range(len(temp['items'])):
             sum_like+= like_video(temp['items'][i]['id']['videoId'])
             sum_comment += comment_video(temp['items'][i]['id']['videoId'])
@@ -79,6 +77,8 @@ def count_like(channelID):
 #     return sum_comment
 
 def like_video(video_id):
+    #mengambil jumlah like dari suatu video
+
         api_key = 'AIzaSyCHPstZ_0VoIvpAL5n49piska5DF17zBgw'
         url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&fields=items(id,snippet(channelId,title),statistics)&part=snippet,statistics&key=' + api_key
         final_url = url + '&id=' + video_id
