@@ -1,8 +1,9 @@
 from flask import Flask, redirect, url_for, session, request, jsonify
 from flask_oauthlib.client import OAuth
-import coba
+import coba, calc
 
 app = Flask(__name__)
+app.config['JSON_SORT_KEYS'] = False
 app.config['GOOGLE_ID'] = "615677142223-hcjeucs12o40tf2jaoeqs3t4e5kd267m.apps.googleusercontent.com"
 app.config['GOOGLE_SECRET'] = "0PPZlYAhe18vY4vqmvIlEDpu"
 app.debug = True
@@ -22,6 +23,8 @@ google = oauth.remote_app(
     access_token_url='https://accounts.google.com/o/oauth2/token',
     authorize_url='https://accounts.google.com/o/oauth2/auth',
 )
+
+
 
 @app.route('/tes')
 def tes():
@@ -44,7 +47,13 @@ def index():
         </div>
         '''.format(me.data["given_name"],me.data["picture"])
         return jsonify({"data": me.data})
-    return redirect(url_for('login'))
+    return '''
+    <div>
+    <h1>Hello There, Welcome to Youtube Engagement Calculator!</h1>
+    <h2>Please authenticate yourself before using our API </h2>
+    <a href="/login"> Login Using Google </a >
+    </div>
+    '''
 
 
 @app.route('/login')
@@ -70,43 +79,59 @@ def authorized():
     me = google.get('userinfo')
     return redirect(url_for('index'))
 
+@app.route('/summary/<string:userID>', methods=['GET'])
+def summary(userID):
+    if 'google_token' in session:
+        data = calc.calculate_all(userID)
+        return jsonify({
+        'Channel Name': data[0],
+        'Likes Count' : data[1],
+        'Views Count' : data[2],
+        'Comment Count' : data[3],
+        'Subscriber Count' : data[4],
+        'Engagement Rate': {
+            'Like Per View': "{} %".format(data[5]),
+            'Comment Per View': "{} %".format(data[6]),
+            'Subscriber Per View': "{} %".format(data[7]),
+            }
+        })
+    return redirect(url_for('index'))
 
 @app.route('/likeperview/<string:userID>', methods=['GET'])
 def likeperview(userID):
     if 'google_token' in session:
-        data = coba.channel_query(userID)
+        data = calc.calculate_all(userID)
         return jsonify({
-        'Channel Name': data['snippet']['title'],
-        'Likes Count' : data['statistics']['videoCount'],
-        'Views Count' : data['statistics']['viewCount'],
-        'Engagement Rate' : '20%'})
-    return redirect(url_for('login'))
+        'Channel Name': data[0],
+        'Likes Count' : data[1],
+        'Views Count' : data[2],
+        'Engagement Rate' : {
+        'Like Per View' : "{} %".format(data[5])}})
+    return redirect(url_for('index'))
 
 @app.route('/commentperview/<string:userID>', methods=['GET'])
 def commentperview(userID):
     if 'google_token' in session:
-        data = coba.channel_query(userID)
+        data = calc.calculate_all(userID)
         return jsonify({
-        'Channel Name': data['snippet']['title'],
-        'Comment Count' : data['statistics']['commentCount'],
-        'Views Count' : data['statistics']['viewCount'],
-        'Engagement Rate' : '20%'})
-    return redirect(url_for('login'))
+        'Channel Name': data[0],
+        'Comment Count' : data[3],
+        'Views Count' : data[2],
+        'Engagement Rate' :  {
+            'Comment per View': "{} %".format(data[6])}})
+    return redirect(url_for('index'))
 
 @app.route('/subscriberperview/<string:userID>', methods=['GET'])
 def subscriberperview(userID):
     if 'google_token' in session:
-        data = coba.channel_query(userID)
-        cname = data['snippet']['title']
-        vc = int(data['statistics']['viewCount'])
-        sc = int(data['statistics']['subscriberCount'])
-        er = round(float(sc/vc*100),2)
+        data = calc.calculate_all(userID)
         return jsonify({
-        'Channel Name': cname,
-        'Subscribers Count' : sc,
-        'Views Count' : vc,
-        'Engagement Rate' :  "{} %".format(er)})
-    return redirect(url_for('login'))
+        'Channel Name': data[0],
+        'Subscribers Count' : data[4],
+        'Views Count' : data[2],
+        'Engagement Rate' :  {
+        'Subscriber Per View': "{} %".format(data[7])}})
+    return redirect(url_for('index'))
 
 @google.tokengetter
 def get_google_oauth_token():
