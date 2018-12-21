@@ -44,16 +44,16 @@ def index():
         <h1>Hello {}!</h1>
         <h2> Here's our available API for <b> Youtube Engagement Calculator </b> </h2>
         <li> <b> SUMMARY </b> </li>
-        <p> <i> /summary/channelID </i> </p>
+        <p> <i> /summary/&lt channelID &gt </i> </p>
         <p> mengeluarkan semua perhitungan engagement rate dari sebuah channel </p>
         <li> <b> LIKE PER VIEW </b> </li>
-        <p> <i> /likeperview/channelID </i> </p>
+        <p> <i> /likeperview/&lt channelID &gt </i> </p>
         <p> mengeluarkan jumlah like per jumlah view dari sebuah channel </p>
         <li> <b> COMMENT PER VIEW </b> </li>
-        <p> <i> /commentperview/channelID </i> </p>
+        <p> <i> /commentperview/&lt channelID &gt </i> </p>
         <p> mengeluarkan jumlah comment per jumlah view dari sebuah channel </p>
         <li> <b> SUBSCRIBER PER VIEW </b> </li>
-        <p> <i> /subscriberperview/channelID </i> </p>
+        <p> <i> /subscriberperview/&lt channelID &gt </i> </p>
         <p> mengeluarkan rata-rata jumlah subscriber per jumlah view dari sebuah channel </p>
 
         <a href="http://127.0.0.1:5000/logout"> Logout </a >

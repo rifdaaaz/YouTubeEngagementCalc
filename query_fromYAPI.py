@@ -28,8 +28,8 @@ def video_search(channelID,pageToken):
 
 # print(video_search('UCeXBXzelo7MvLkMr3dAKODQ'))
 
-def count_like(channelID):
-    #menghitung total like dari sebuah channel, iterate semua videonya
+def count_like_comment(channelID):
+    #menghitung total like dan comment dari sebuah channel, iterate semua videonya
 
     sum_like=0
     sum_comment=0
